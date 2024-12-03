@@ -9,7 +9,7 @@
 .buildlog/
 .history
 .svn/
-/fron/biblioteca/migrate_working_dir/
+/front/biblioteca/migrate_working_dir/
 
 # IntelliJ related
 *.iml
@@ -25,12 +25,12 @@
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
-/fron/biblioteca/.dart_tool/
-/fron/biblioteca/.flutter-plugins
-/fron/biblioteca/.flutter-plugins-dependencies
-/fron/biblioteca/.pub-cache/
-/fron/biblioteca/.pub/
-/fron/biblioteca/build/
+/front/biblioteca/.dart_tool/
+/front/biblioteca/.flutter-plugins
+/front/biblioteca/.flutter-plugins-dependencies
+/front/biblioteca/.pub-cache/
+/front/biblioteca/.pub/
+/front/biblioteca/build/
 
 # Symbolication related
 app.*.symbols
@@ -39,9 +39,9 @@ app.*.symbols
 app.*.map.json
 
 # Android Studio will place build artifacts here
-/fron/biblioteca/android/app/debug
-/fron/biblioteca/android/app/profile
-/fron/biblioteca/android/app/release
+/front/biblioteca/android/app/debug
+/front/biblioteca/android/app/profile
+/front/biblioteca/android/app/release
 
 ## Fim do gitignore do front-end
 

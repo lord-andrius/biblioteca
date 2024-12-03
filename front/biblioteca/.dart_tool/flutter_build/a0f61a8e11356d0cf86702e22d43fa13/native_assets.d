@@ -1,1 +1,0 @@
- /home/andrew/projetos/biblioteca/front/biblioteca/.dart_tool/flutter_build/a0f61a8e11356d0cf86702e22d43fa13/native_assets.yaml: 

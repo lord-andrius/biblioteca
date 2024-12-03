@@ -1,1 +1,0 @@
- /home/kevin/Documentos/GitHub/biblioteca/front/biblioteca/.dart_tool/flutter_build/075e846b4adb37943b4fa7634bc5a9fe/native_assets.yaml: 
