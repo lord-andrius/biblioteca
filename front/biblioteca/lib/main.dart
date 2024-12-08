@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:biblioteca/screens/pagina_inicial.dart';
 import 'package:biblioteca/screens/redefinir_senha.dart';
@@ -11,11 +11,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  if (Platform.isLinux || Platform.isWindows) {
+  /* if (Platform.isLinux || Platform.isWindows) {
     var dir = Directory.current.path;
     dir = dir.substring(1, dir.indexOf("front"));
     Process.run("go", ["run", dir]);
-  }
+  }*/
 
   runApp(const Myapp());
 }
