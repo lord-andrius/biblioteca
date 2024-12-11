@@ -19,6 +19,8 @@ const (
 	ErroCpfDuplicado
 	ErroEmailDuplicado
 	ErroUsuarioInexistente
+	ErroLivroInexistente
+	ErroIsbnDuplicado
 )
 
 var dbpool *pgxpool.Pool

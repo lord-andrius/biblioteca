@@ -1,7 +1,11 @@
 package utilidades
 
-import "unicode"
-import "regexp"
+import (
+	"regexp"
+	"strconv"
+	"strings"
+	"unicode"
+)
 
 const emailRegex = `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
 
@@ -56,7 +60,6 @@ func ValidarEmail(email string) bool {
 	return deuMatch
 }
 
-
 func StringENumerica(s string) bool {
 	for _, c := range s {
 		if !unicode.IsDigit(c) {
@@ -64,4 +67,67 @@ func StringENumerica(s string) bool {
 		}
 	}
 	return true
+}
+
+func ValidarISBN(isbn string) bool {
+	isbn = strings.ReplaceAll(isbn, "-", "")
+	isbn = strings.ReplaceAll(isbn, " ", "")
+
+	if len(isbn) == 10 {
+		return validarISBN10(isbn)
+	} else if len(isbn) == 13 {
+		return validarISBN13(isbn)
+	}
+	return false
+}
+
+func validarISBN10(isbn string) bool {
+	if len(isbn) != 10 {
+		return false
+	}
+
+	soma := 0
+	for i := 0; i < 9; i++ {
+		digito, err := strconv.Atoi(string(isbn[i]))
+		if err != nil {
+			return false
+		}
+		soma += digito * (10 - i)
+	}
+
+	ultimoCaracter := isbn[9]
+	var ultimoDigito int
+	if ultimoCaracter == 'X' {
+		ultimoDigito = 10
+	} else {
+		var err error
+		ultimoDigito, err = strconv.Atoi(string(ultimoCaracter))
+		if err != nil {
+			return false
+		}
+	}
+
+	soma += ultimoDigito
+	return soma%11 == 0
+}
+
+func validarISBN13(isbn string) bool {
+	if len(isbn) != 13 {
+		return false
+	}
+
+	soma := 0
+	for i := 0; i < 13; i++ {
+		digito, err := strconv.Atoi(string(isbn[i]))
+		if err != nil {
+			return false
+		}
+		if i%2 == 0 {
+			soma += digito
+		} else {
+			soma += digito * 3
+		}
+	}
+
+	return soma%10 == 0
 }

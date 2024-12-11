@@ -2,8 +2,8 @@ package sessao
 
 import (
 	"biblioteca/banco"
-	"math/rand"
 	"math"
+	"math/rand"
 	"time"
 )
 

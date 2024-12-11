@@ -144,3 +144,13 @@ func ExcluirAutor(a modelos.Autor) error {
 
 	return nil
 }
+
+func PegarIdAutor(nome string) int {
+	conexao := PegarConexao()
+	var id int
+	if conexao.QueryRow(context.Background(), "select id_autor from autor where nome = $1", nome).Scan(&id) == nil {
+		return id
+	} else {
+		return 0
+	}
+}
