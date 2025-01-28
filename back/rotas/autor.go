@@ -27,7 +27,6 @@ func Autor(resposta http.ResponseWriter, requisicao *http.Request) {
 		if err != nil {
 			http.Error(resposta, fmt.Sprintf("Erro ao tentar usar o servico: %v", err), httpCode)
 		}
-		fmt.Println(autores)
 
 		resposta.Header().Set("Content-Type", "application/json")
 		resposta.WriteHeader(httpCode)

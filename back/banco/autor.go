@@ -3,7 +3,6 @@ package banco
 import (
 	"biblioteca/modelos"
 	"context"
-	"fmt"
 	"strings"
 )
 
@@ -29,7 +28,6 @@ func VisualizarAutores() ([]modelos.AutorResposta, error) {
 		left join pais p on a.nacionalidade = p.id_pais`,
 	)
 	if err != nil {
-		fmt.Println("Erro ao tentar executar a query")
 		return autores, err
 	}
 	defer linhas.Close()
@@ -37,7 +35,6 @@ func VisualizarAutores() ([]modelos.AutorResposta, error) {
 	for linhas.Next() {
 		var autor modelos.AutorResposta
 		if err := linhas.Scan(&autor.ID, &autor.Nome, &autor.AnoNascimento, &autor.Nacionalidade, &autor.NacionalidadeCodigo, &autor.Sexo, &autor.SexoCodigo); err != nil && !strings.Contains(err.Error(), "cannot scan NULL") {
-			fmt.Println("Erro ao tentar scannear o resultado da query")
 			return autores, err
 		}
 		autores = append(autores, autor)
@@ -78,7 +75,6 @@ func InserirAutor(a modelos.Autor) error {
 		parametroNacionalidade,
 		parametroSexo,
 	); err != nil {
-		fmt.Println(a.Nome, a.AnoNascimento, a.Nacionalidade, a.Sexo)
 		return err
 	}
 

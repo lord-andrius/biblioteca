@@ -13,11 +13,11 @@ type Autor struct {
 
 // AutorResposta é o retorno dos dados armazenados no banco referente ao autor, é utilizado para exibir informações formatadas para o usuário da api
 type AutorResposta struct {
-	ID                  int    `json:"id"`
-	Nome                string `json:"nome"`
-	AnoNascimento       uint16 `json:"ano_nascimento,omitempty"`
-	Nacionalidade       string `json:"Nacionalidade,omitempty"`
-	NacionalidadeCodigo uint8  `json:"nacionalidade_codigo,omitempty"`
-	Sexo                string `json:"sexo,omiempty"`
-	SexoCodigo          string `json:"sexo_codigo,omitempy"`
+	ID                  int     `json:"id"`
+	Nome                string  `json:"nome"`
+	AnoNascimento       *uint16 `json:"ano_nascimento,omitempty"`
+	Nacionalidade       *string `json:"Nacionalidade,omitempty"`
+	NacionalidadeCodigo *uint8  `json:"nacionalidade_codigo,omitempty"`
+	Sexo                *string `json:"sexo,omitempty"`
+	SexoCodigo          *string `json:"sexo_codigo,omitempty"`
 }
