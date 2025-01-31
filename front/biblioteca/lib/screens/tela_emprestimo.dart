@@ -309,7 +309,7 @@ Future<void> msgConfirm(BuildContext context, String msg, EmprestimosModel livro
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Pesquisa De Aluno", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 22)),
+                Text("Pesquisa De Aluno", style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 25)),
                 const SizedBox(height: 40),
                 Row(
                   children: [
