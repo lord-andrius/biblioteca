@@ -143,7 +143,7 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
             );
           }else if(!selectedBoxExemplar.contains(selectbook)){
             if(selectbook!.statusCodigo !=1){
-              msgConfirm(selectbook!);
+              msgIndisponivel(selectbook!);
             }else{
               setState(() {
                 selectedBoxExemplar.add(selectbook!);
@@ -170,7 +170,7 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
       }
     });
   }
-  Future<void> msgConfirm(Exemplar exemplar){
+  Future<void> msgIndisponivel(Exemplar exemplar){
     return showDialog(
       context: context, 
       builder: (context)=> AlertDialog(
@@ -337,6 +337,328 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
                     )
                   ],
                 )
+            ],
+          )
+        ],
+      )
+    );
+  }
+  Future<void> msgConfirm(
+      BuildContext context, String msg, EmprestimosModel livro) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: 10),
+                  width: 800,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Cabeçalho
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        width: double.infinity,
+                        child: Text(
+                          'Confirmação de $msg',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      // Corpo do diálogo
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        child: Column(
+                          children: [
+                            // Tabela de informações
+                            Table(
+                              columnWidths: const {
+                                0: FlexColumnWidth(0.08),
+                                1: FlexColumnWidth(0.25),
+                                2: FlexColumnWidth(0.20),
+                                3: FlexColumnWidth(0.20),
+                              },
+                              border: TableBorder.all(
+                                color: const Color.fromARGB(215, 200, 200, 200),
+                              ),
+                              children: [
+                                // Linha de Cabeçalho
+                                const TableRow(
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 44, 62, 80),
+                                  ),
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Código',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white
+                                            ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Nome',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white
+                                            ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Devolução Prevista',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white
+                                            ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Situação',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Linha de Dados
+                                TableRow(
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 233, 235, 238),
+                                  ),
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        livro.codigo,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        livro.nome,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        livro.dataDevolucao,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        '$msg Realizado!',
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.green,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            // Botão de Confirmação
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green[400],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Fecha o diálogo
+                              },
+                              child: const Text(
+                                'Confirmar',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Botão Fechar
+                // Positioned(
+                //   right: 0,
+                //   child: IconButton(
+                //     icon: const Icon(Icons.close, color: Colors.red),
+                //     onPressed: () {
+                //       Navigator.of(context).pop(); // Fecha o diálogo
+                //     },
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  Future<void> msgConfirmEmprestimo(List<Exemplar> exemplaresEmpres){
+    return showDialog(
+      context: context, 
+      builder: (context)=> AlertDialog(
+        title: const Text(
+          'Confirmação de Empréstimo',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20
+          ),
+        ),
+        content: Container(
+          width: 800,
+          child: Table(
+            columnWidths: const {
+              0: FlexColumnWidth(0.08),
+              1: FlexColumnWidth(0.15),
+              2: FlexColumnWidth(0.10),
+              3: FlexColumnWidth(0.11)
+            },
+            border:TableBorder.all(
+              color: const Color.fromARGB(215, 200, 200, 200)
+            ),
+            children: [
+              const TableRow(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 44, 62, 80)
+                ),
+                children:[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Tombamento",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Título",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Ano de Publicação",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Situação",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)
+                    ), 
+                  )
+                ]
+              ),
+              for(Exemplar exemplar in exemplaresEmpres)
+                TableRow(
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(233, 235, 238, 75)
+                  ),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        exemplar.id.toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14)
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        exemplar.titulo,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14)
+                      ),
+                    )
+                    ,Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        DateFormat('dd/MM/YYYY').format(exemplar.anoPublicacao),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14) 
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: 
+                          Text(
+                            'Empréstimo realizado!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14, color: Colors.green[400])
+                          ),
+                    )
+                  ]
+                )
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.all(11),
+                  backgroundColor: Colors.green[400],
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)
+                )
+                ),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                }, 
+                child: const Text(
+                  'Confirmar',
+                  style: TextStyle(
+                   fontSize: 15.5
+                  ),
+                )
+             ),
             ],
           )
         ],
@@ -753,7 +1075,7 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
                                               child: Row(
                                                 children: [
                                                   Icon(Icons.library_books, color: Color.fromARGB(255,46, 125, 50), size: 25,),
-                                                  SizedBox(width: 7,),
+                                                  SizedBox(width: 8,),
                                                   Text(
                                                     "Exemplares Emprestados",
                                                     style: Theme.of(context)
@@ -780,8 +1102,9 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
                                         columnWidths: const {
                                           0: FlexColumnWidth(0.08),
                                           1: FlexColumnWidth(0.26),
-                                          2: FlexColumnWidth(0.16),
-                                          3: FlexColumnWidth(0.16),
+                                          2: FlexColumnWidth(0.14),
+                                          3: FlexColumnWidth(0.14),
+                                          4: FlexColumnWidth(0.15),
                                         },
                                         border: TableBorder.all(
                                           color: const Color.fromARGB(215, 200, 200, 200),
@@ -810,9 +1133,17 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
                                                       textAlign: TextAlign.center,
                                                       style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
                                                 ),
+                                                
                                                 Padding(
                                                   padding: EdgeInsets.all(7.0),
-                                                  child: Text('Data de Devolução',
+                                                  child: Text('Data de Devoluçao',
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
+                                                ),
+                                                
+                                                Padding(
+                                                  padding: EdgeInsets.all(7.0),
+                                                  child: Text('Ação',
                                                       textAlign: TextAlign.center,
                                                       style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
                                                 ),
@@ -866,6 +1197,51 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
                                                             style: TextStyle(fontWeight: FontWeight.w300,fontSize: 14.5)
                                                             ),
                                                   ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.symmetric(
+                                                     vertical: 6,
+                                                      horizontal: 37,
+                                                    ),
+                                                   
+                                                  child: TextButton(
+                                                    style: TextButton.styleFrom(
+                                                    
+                                                    backgroundColor:
+                                                        Colors.orange[400],
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      selectUser!
+                                                              .livrosEmprestados[x]
+                                                              .dataDevolucao =
+                                                          renovar(selectUser!
+                                                              .livrosEmprestados[
+                                                                  x]
+                                                              .dataDevolucao);
+                                                    });
+                                                    msgConfirm(
+                                                        context,
+                                                        'Renovação',
+                                                        selectUser!
+                                                            .livrosEmprestados[x]);
+                                                    
+                                                  },
+                                                  child: const Text('Renovar',
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.w400
+                                                          ),
+                                                      textAlign:
+                                                          TextAlign.center),
+                                                ),
+                                              )
                                                 ]),
                                         ],
                                       ),
@@ -978,6 +1354,8 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
                                                     setState(() {
                                                       
                                                     });
+                                                    msgConfirmEmprestimo(exemplaresSelecionadosEmprestimo);
+                                                    exemplaresSelecionadosEmprestimo = [];
                                                   }, 
                                                   child: const Row(
                                                     children: [
@@ -1195,3 +1573,7 @@ class _PaginaEmprestimoState extends State<PaginaEmprestimo> {
     );
   }
 }
+
+
+                                              
+                                            

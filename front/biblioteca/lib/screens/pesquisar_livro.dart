@@ -318,21 +318,14 @@ class _PesquisarLivroState extends State<PesquisarLivro> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color.fromARGB(255, 218, 227, 238),
-                                        Colors.white
-                                       ], 
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
+                                    color: Color.fromARGB(230,227, 242, 253),
                                     borderRadius: BorderRadius.circular(8),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.1),
-                                        blurRadius: 8,
-                                        spreadRadius: 2,
-                                        offset: Offset(0, 4),
+                                        blurRadius: 4,
+                                        spreadRadius: 1,
+                                        offset: Offset(0, 2),
                                       ),
                                     ],
                                   ),
@@ -342,14 +335,20 @@ class _PesquisarLivroState extends State<PesquisarLivro> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.only(left: 18),
-                                          child: Text(
-                                           "Livro Selecionado",
-                                           style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                                             fontWeight: FontWeight.bold,
-                                             fontSize: 20.3,
-                                             color: Colors.black,
-                                           ),
+                                          padding: const EdgeInsets.only(left: 4),
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.book, color: Color.fromARGB(255,46, 125, 50), size: 23,),
+                                              SizedBox(width: 8,),
+                                              Text(
+                                               "Livro Selecionado",
+                                               style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                                                 fontWeight: FontWeight.bold,
+                                                 fontSize: 20.3,
+                                                 color: Colors.black,
+                                               ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                     Divider(thickness: 2, color: Colors.grey[400]),
@@ -477,16 +476,22 @@ class _PesquisarLivroState extends State<PesquisarLivro> {
                                 ),
                                 const SizedBox(height: 50,),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 18),
-                                  child: Text(
-                                     "Detalhes Dos Exemplares",
-                                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                                       fontWeight: FontWeight.bold,
-                                       fontSize: 20.3,
-                                       color: Colors.black,
-                                     ),
-                                     textAlign: TextAlign.center,
-                                   ),
+                                  padding: const EdgeInsets.only(left: 4),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.library_books, color: Color.fromARGB(255,46, 125, 50), size: 24,),
+                                      SizedBox(width: 8,),
+                                      Text(
+                                         "Detalhes Dos Exemplares",
+                                         style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                                           fontWeight: FontWeight.bold,
+                                           fontSize: 20.3,
+                                           color: Colors.black,
+                                         ),
+                                         textAlign: TextAlign.center,
+                                       ),
+                                    ],
+                                  ),
                                 ),
                               Divider(thickness: 2, color: Colors.grey[400]),
                               SizedBox(height: 10,),
