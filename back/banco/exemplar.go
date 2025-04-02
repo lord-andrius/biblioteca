@@ -150,6 +150,45 @@ where el.id_exemplar_livro = $1`
 	return exemplarEncontrado, true
 }
 
+func PegarExemplarPorIdTransacao(transacao pgx.Tx, id int) (modelos.ExemplarLivro, bool) {
+	textoQuery := `
+	select 
+	el.id_exemplar_livro,
+	l.id_livro,
+	l.isbn,
+	l.titulo,
+	to_char(l.ano_publicacao, 'yyyy-mm-dd'),
+	l.editora ,
+	l.pais ,
+	el.cativo,
+	el.status,
+	el.estado,
+	el.ativo
+from exemplar_livro el
+join livro l on l.id_livro = el.livro
+where el.id_exemplar_livro = $1`
+
+	var exemplarEncontrado modelos.ExemplarLivro
+	if erro := transacao.QueryRow(context.Background(), textoQuery, id).Scan(
+		&exemplarEncontrado.IdDoExemplarLivro,
+		&exemplarEncontrado.Livro.IdDoLivro,
+		&exemplarEncontrado.Livro.Isbn,
+		&exemplarEncontrado.Livro.Titulo,
+		&exemplarEncontrado.Livro.AnoPublicacao,
+		&exemplarEncontrado.Livro.Editora,
+		&exemplarEncontrado.Livro.Pais,
+		&exemplarEncontrado.Cativo,
+		&exemplarEncontrado.Status,
+		&exemplarEncontrado.Estado,
+		&exemplarEncontrado.Ativo,
+	); erro != nil {
+		return modelos.ExemplarLivro{}, false
+	}
+
+	return exemplarEncontrado, true
+}
+
+
 func PegarExemplarPeloIdDoLivro(IdDoLivro int) ([]modelos.ExemplarLivro, bool) {
 	conexao := PegarConexao()
 	textoQuery := `

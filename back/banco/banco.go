@@ -9,6 +9,7 @@ import (
 
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5"
 )
 
 // constantes de erros
@@ -53,6 +54,10 @@ func Inicializar() {
 
 func PegarConexao() *pgxpool.Pool {
 	return dbpool
+}
+
+func CriarTransacao() (pgx.Tx, error) {
+	return PegarConexao().Begin(context.Background())
 }
 
 func Finalizar() {

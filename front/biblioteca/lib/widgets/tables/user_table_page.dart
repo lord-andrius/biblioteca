@@ -109,26 +109,6 @@ class UserTablePageState extends State<UserTablePage> {
                         ),
                       ),
                     ),
-                    //Filtro
-                    // SizedBox(
-                    //   width: 180.0,
-                    //   height: 30.0,
-                    //   child: TextField(
-                    //     cursorHeight: 20.0,
-                    //     controller: _buscaController,
-                    //     decoration: InputDecoration(
-                    //       prefixIcon: const Icon(Icons.filter_alt),
-                    //       prefixIconColor:
-                    //           Theme.of(context).colorScheme.primary,
-                    //       border: const OutlineInputBorder(),
-                    //       contentPadding: const EdgeInsets.symmetric(
-                    //         horizontal: 10.0,
-                    //       ),
-                    //       hintText: 'Filtrar resultados',
-                    //       hintStyle: const TextStyle(fontSize: 12.0),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
                 const SizedBox(

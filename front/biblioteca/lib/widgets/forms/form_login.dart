@@ -81,7 +81,7 @@ class _FormLoginState extends State<FormLogin> {
       });
     } catch (e) {
       print("$e");
-      showError('Ops! Algo de errado não está certo, volte mais tarde');
+      showError('Não foi possível conectar ao banco de dados no momento. Por favor, tente novamente mais tarde');
     }
   }
 

@@ -76,7 +76,7 @@ class _FormRedefinirSenhaCodigoState extends State<FormRedefinirSenhaCodigo> {
           TextButton(
             onPressed: () {
               // Voltar à tela de login
-              Navigator.pop(context);
+              Provider.of<LoginProvider>(context, listen: false).setModo(ModoLogin.login);
             },
             child: const Text('Voltar para o Login'),
           ),

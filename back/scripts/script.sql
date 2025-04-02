@@ -185,15 +185,11 @@ CREATE TABLE IF NOT EXISTS usuario (
 CREATE TABLE IF NOT EXISTS emprestimo (
 	id_emprestimo SERIAL NOT null,
 	exemplar_livro INT NOT NULL,
-	usuario INT NOT NULL,
+	usuario INT NOT NULL, -- Esse usuário é o aluno que pede o livro
 	data_emprestimo DATE NOT NULL,
 	num_renovacoes smallint DEFAULT 0,
 	data_prevista_devolucao DATE NOT NULL,
-	data_devolucao DATE,
-	--valor_multa SMALLINT DEFAULT 0 CHECK(valor_multa >= 0),
-	--valor_adicionais SMALLINT DEFAULT 0 CHECK(valor_multa >= 0),
-	--total_multa SMALLINT DEFAULT 0,
-	--observacao VARCHAR(255),
+	data_devolucao DATE DEFAULT NULL,
 	status smallint DEFAULT 1,
 	data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_atualizacao TIMESTAMP,
@@ -205,13 +201,12 @@ CREATE TABLE IF NOT EXISTS emprestimo (
 
 CREATE TABLE IF NOT EXISTS detalhe_emprestimo (
 	id_detalhe_emprestimo SERIAL NOT NULL,
-	usuario INT NOT NULL,
+	usuario INT NOT NULL, -- Esse é o usuário do sistema que realiza o empréstimo
 	emprestimo INT NOT NULL,
 	data_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	acao SMALLINT NOT NULL,
 	detalhe VARCHAR(255),
 	data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	data_atualizacao TIMESTAMP,
 	observacao VARCHAR(255),
 	primary key(id_detalhe_emprestimo),
 	foreign key (usuario) references usuario(id_usuario),
