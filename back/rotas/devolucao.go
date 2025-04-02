@@ -3,49 +3,44 @@ package rotas
 import (
 	"biblioteca/servicos"
 	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
 )
 
+type requisicaoDevolucao struct {
+	IdDaSessao               uint64 `json:"sessao"`
+	LoginDoUsuarioRequerente string `json:"login"`
+	IdDoExemplarLivro        uint64 `json:"id_exemplar_livro"`
+}
+
 func Devolucao(resposta http.ResponseWriter, requisicao *http.Request) {
-	corpoDaRequisicao, erro := io.ReadAll(requisicao.Body)
 
-	if erro != nil {
-		resposta.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(resposta, "A requisição para a rota de exemplar foi mal feita")
-		return
+	var requisicaoDevolucao requisicaoExemplar
+	if erro := json.NewDecoder(requisicao.Body).Decode(&requisicaoDevolucao); erro != nil {
+		http.Error(resposta, "A requisição para a rota de devolução foi mal feita", http.StatusBadRequest)
 	}
-
-	var requisicaoExemplar requisicaoExemplar
-	if json.Unmarshal(corpoDaRequisicao, &requisicaoExemplar) != nil {
-		resposta.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(resposta, "A requisição para a rota de devolução foi mal feita")
-		return
-	}
-
-	if len(requisicaoExemplar.LoginDoUsuario) == 0 {
-		resposta.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(resposta, "A requisição para a rota de devolução foi mal feita")
-		return
-
-	}
-
 	switch requisicao.Method {
-	case "PUT":
-		exemplarModificado, erro := servicos.AtualizarExemplar(requisicaoExemplar.IdDaSessao, requisicaoExemplar.LoginDoUsuario, requisicaoExemplarParaModeloExemplar(requisicaoExemplar))
-
-		if erro != servicos.ErroServicoExemplarNenhum {
-			erroServicoExemplarParaErroHttp(erro, resposta)
+	case http.MethodGet:
+	case http.MethodPost:
+		if requisicaoDevolucao.IdDoExemplarLivro == 0 {
+			http.Error(resposta, "O campo id_exemplar_livro é um campo obrigatório", http.StatusBadRequest)
 			return
 		}
 
-		respostaExemplar := respostaExemplar{
-			Exemplares: modelosExemplarLivroParaViewExemplarLivro(exemplarModificado),
+		exemplarLivroDevolucao, erro := servicos.RealizarDevolucao(requisicaoDevolucao.IdDaSessao, requisicaoDevolucao.LoginDoUsuarioRequerente, requisicaoDevolucao.IdDoExemplarLivro)
+		if erro != nil {
+			switch erro {
+			case servicos.ErroDevolucaoUsuarioSemPermissao:
+				http.Error(resposta, "Usuário sem permissão", http.StatusUnauthorized)
+			case servicos.ErroDevolucaoExeplarLivroNaoExiste:
+				http.Error(resposta, "O exemplar do livro não existe", http.StatusNotFound)
+			case servicos.ErroDevolucaoPossuiStatusIncompativel:
+				http.Error(resposta, "O exemplar do livro possui status incompatível", http.StatusConflict)
+			}
 		}
-		respostaExemplarJson, _ := json.Marshal(&respostaExemplar)
-		fmt.Fprintf(resposta, "%s", respostaExemplarJson)
-		return
+		resposta.WriteHeader(http.StatusOK)
+		resposta.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(resposta).Encode(exemplarLivroDevolucao)
+	default:
+		http.Error(resposta, "Método não permitido", http.StatusMethodNotAllowed)
 	}
-
 }

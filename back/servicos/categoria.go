@@ -1,4 +1,4 @@
-package categoria
+package servicos
 
 import (
 	"biblioteca/banco"
