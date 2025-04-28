@@ -8,8 +8,8 @@ import (
 	"strings"
 
 	"github.com/jackc/pgerrcode"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // constantes de erros

@@ -130,6 +130,8 @@ from exemplar_livro el
 join livro l on l.id_livro = el.livro
 where el.id_exemplar_livro = $1`
 
+	fmt.Println(id)
+
 	var exemplarEncontrado modelos.ExemplarLivro
 	if erro := conexao.QueryRow(context.Background(), textoQuery, id).Scan(
 		&exemplarEncontrado.IdDoExemplarLivro,
@@ -144,6 +146,7 @@ where el.id_exemplar_livro = $1`
 		&exemplarEncontrado.Estado,
 		&exemplarEncontrado.Ativo,
 	); erro != nil {
+		fmt.Println("Erro: ", erro)
 		return modelos.ExemplarLivro{}, false
 	}
 
@@ -187,7 +190,6 @@ where el.id_exemplar_livro = $1`
 
 	return exemplarEncontrado, true
 }
-
 
 func PegarExemplarPeloIdDoLivro(IdDoLivro int) ([]modelos.ExemplarLivro, bool) {
 	conexao := PegarConexao()
@@ -270,4 +272,21 @@ func DeletarExemplar(exemplarASerExcluido modelos.ExemplarLivro) ErroBancoExempl
 	exemplarDesativado := exemplarASerExcluido
 	exemplarDesativado.Ativo = false
 	return AtualizarExemplar(exemplarASerExcluido, exemplarDesativado)
+}
+
+func AtualizarStatusExemplarPorIdTransacao(transacao pgx.Tx, id int, status int) error {
+	query := `
+		UPDATE exemplar_livro 
+		SET status = $1, data_atualizacao = CURRENT_TIMESTAMP 
+		WHERE id_exemplar_livro = $2
+	`
+	if _, erro := transacao.Exec(
+		context.Background(),
+		query,
+		status,
+		id,
+	); erro != nil {
+		return erro
+	}
+	return nil
 }

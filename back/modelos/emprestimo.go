@@ -1,11 +1,10 @@
 package modelos
 
 const (
-	StatusEmprestimoEmAndamento = 1
-  StatusEmprestimoEntregueComAtraso = 2
-  StatusEmprestimoConcluido = 3
+	StatusEmprestimoEmAndamento       = 1
+	StatusEmprestimoEntregueComAtraso = 2
+	StatusEmprestimoConcluido         = 3
 )
-
 
 type Emprestimo struct {
 	IdDoEmprestimo        int
@@ -13,7 +12,7 @@ type Emprestimo struct {
 	Usuario               Usuario // Esse usuário é o usuario requerente
 	DataEmprestimo        string
 	NumeroRenovacoes      int
-  DataDeEntregaPrevista string
+	DataDeEntregaPrevista string
 	DataDeDevolucao       string
 	Status                int
 }
