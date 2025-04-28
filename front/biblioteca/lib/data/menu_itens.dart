@@ -11,7 +11,8 @@ List<MenuModelo> menuitens = [
   ]),
   MenuModelo("Catalogação", Icons.menu_book_outlined, [
     SubMenuModelo("Autores", "/autores"),
-    SubMenuModelo("Livros", "/livros")
+    SubMenuModelo("Livros", "/livros"),
+    SubMenuModelo("Categorias", "/categorias"),
   ]),
   MenuModelo("Documentação", Icons.list_alt_sharp, [
     SubMenuModelo("Relatórios", "/relatorios"),

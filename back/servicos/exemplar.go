@@ -109,3 +109,7 @@ func DeletarExemplar(idDaSessao uint64,loginDoUsuarioRequerente string ,idDoExem
 					  
 	return exemplarExcluido, erro
 }
+
+func PegarExemplarPeloId(idDoExemplar int) (modelos.ExemplarLivro, bool) {
+	return banco.PegarExemplarPorId(idDoExemplar)
+}

@@ -15,6 +15,7 @@ const (
 	PermissaoCriarCategoria     = 0b100000000000
 	PermissaoAtualizarCategoria = 0b1000000000000
 	PermissaoDeletarCategoria   = 0b10000000000000
+	PermissaoEmprestarLivro     = 0b10000000000000
 
 	PermissaoCrudUsuario = PermissaoDeletarUsuario | PermissaoAtualizarUsuario | PermssaoLerUsuario | PermissaoCriarUsuario
 )

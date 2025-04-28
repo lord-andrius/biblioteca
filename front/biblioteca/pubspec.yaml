@@ -46,6 +46,7 @@ dependencies:
   http: ^1.3.0
   mockito: ^5.4.5
   mocktail: ^1.0.4
+  fl_chart: ^0.70.2
 
 
 dev_dependencies:

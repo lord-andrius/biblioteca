@@ -6,6 +6,8 @@ import 'package:biblioteca/data/models/livro_model.dart';
 import 'package:biblioteca/data/providers/livro_provider.dart';
 import 'package:biblioteca/data/models/paises_model.dart';
 import 'package:biblioteca/data/providers/paises_provider.dart';
+import 'package:biblioteca/data/models/exemplar_model.dart';
+import 'package:biblioteca/data/providers/exemplares_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:biblioteca/utils/routes.dart';
 
@@ -28,6 +30,8 @@ class _FormBookState extends State<FormBook> {
   final TextEditingController _editoraController = TextEditingController();
   final TextEditingController _anoPublicacaoController =
       TextEditingController();
+  final TextEditingController _numeroExemplaresController =
+      TextEditingController(text: "1");
   final TextEditingController _paisController = TextEditingController();
   final List<TextEditingController> _authorsControllers = [
     TextEditingController()
@@ -43,21 +47,18 @@ class _FormBookState extends State<FormBook> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print("chamada de load paises");
       Provider.of<PaisesProvider>(context, listen: false)
           .loadPaises()
           .then((_) {
         _carregarPaises();
         setState(() {});
       });
-      print(Provider.of<PaisesProvider>(context, listen: false).paises);
     });
   }
 
   Future<void> _carregarPaises() async {
     try {
       List<Pais> paisesDaApi = await buscarPaisesDaAPI();
-      print(paisesDaApi);
       setState(() {
         _paises = paisesDaApi;
         if (widget.livro != null) {
@@ -82,8 +83,46 @@ class _FormBookState extends State<FormBook> {
   Future<List<Pais>> buscarPaisesDaAPI() async {
     List<Pais> paises =
         Provider.of<PaisesProvider>(context, listen: false).paises;
-    print(paises);
     return paises;
+  }
+
+  bool _validarISBN10(String isbn) {
+    int soma = 0;
+    for (int i = 0; i < 9; i++) {
+      if (isbn[i].contains(RegExp(r'[0-9]'))) {
+        soma += int.parse(isbn[i]) * (10 - i);
+      } else {
+        return false;
+      }
+    }
+
+    String ultimo = isbn[9].toUpperCase();
+    soma += (ultimo == 'X') ? 10 : int.tryParse(ultimo) ?? -1;
+
+    return soma % 11 == 0;
+  }
+
+  bool _validarISBN13(String isbn) {
+    if (!isbn.contains(RegExp(r'^\d{13}$'))) return false;
+
+    int soma = 0;
+    for (int i = 0; i < 13; i++) {
+      int digito = int.parse(isbn[i]);
+      soma += (i % 2 == 0) ? digito : digito * 3;
+    }
+
+    return soma % 10 == 0;
+  }
+
+  bool validarISBN(String isbn) {
+    isbn = isbn.replaceAll(RegExp(r'[^0-9Xx]'), '');
+
+    if (isbn.length == 10) {
+      return _validarISBN10(isbn);
+    } else if (isbn.length == 13) {
+      return _validarISBN13(isbn);
+    }
+    return false;
   }
 
   void btnSalvar(context) async {
@@ -122,11 +161,6 @@ class _FormBookState extends State<FormBook> {
 
       Map<String, dynamic> livroJson = newLivro.toJson();
 
-      livroJson.forEach((key, value) {
-        print('$key: $value (${value.runtimeType})');
-      });
-      print(
-          "Livro, autores e categorias tentando ser upados: $autores,$categorias");
       await provider.addLivro(livroJson, autores, categorias);
 
       if (provider.hasErrors) {
@@ -159,6 +193,7 @@ class _FormBookState extends State<FormBook> {
     _editoraController.dispose();
     _anoPublicacaoController.dispose();
     _paisController.dispose();
+    _numeroExemplaresController.dispose();
 
     for (var controller in _authorsControllers) {
       controller.dispose();
@@ -269,6 +304,11 @@ class _FormBookState extends State<FormBook> {
                           if (value == null || value.isEmpty) {
                             return "Preencha esse campo";
                           }
+
+                          if (!validarISBN(value)) {
+                            return "ISBN inválido";
+                          }
+
                           return null;
                         },
                       ),
@@ -467,6 +507,30 @@ class _FormBookState extends State<FormBook> {
                       ),
                       const SizedBox(height: 20.0),
 
+                      // Número de Exemplares
+                      TextFormField(
+                        controller: _numeroExemplaresController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          label:
+                              CampoObrigatorio(label: "Número de Exemplares"),
+                          border: OutlineInputBorder(),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Preencha esse campo";
+                          }
+
+                          final numero = int.tryParse(value);
+                          if (numero == null || numero < 1) {
+                            return "Informe um número válido (mínimo 1)";
+                          }
+
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20.0),
+
                       // Botões
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -489,36 +553,6 @@ class _FormBookState extends State<FormBook> {
                           const SizedBox(width: 16.0),
                           ElevatedButton(
                             onPressed: () async {
-                              if (!_formKey.currentState!.validate()) {
-                                String erros = '';
-
-                                if (_isbnController.text.isEmpty) {
-                                  erros += 'ISBN está vazio.\n';
-                                }
-                                if (_tituloController.text.isEmpty) {
-                                  erros += 'Título está vazio.\n';
-                                }
-                                if (_editoraController.text.isEmpty) {
-                                  erros += 'Editora está vazia.\n';
-                                }
-                                if (_anoPublicacaoController.text.isEmpty) {
-                                  erros += 'Ano de publicação está vazio.\n';
-                                }
-                                if (_paisController.text.isEmpty) {
-                                  erros += 'País está vazio.\n';
-                                }
-
-                                if (erros.isNotEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(erros),
-                                      duration: const Duration(seconds: 3),
-                                    ),
-                                  );
-                                }
-                                return;
-                              }
-
                               btnSalvar(context);
                             },
                             style: ElevatedButton.styleFrom(

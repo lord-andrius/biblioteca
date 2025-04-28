@@ -1,4 +1,5 @@
 // Provider para gerenciar o estado de Exemplares
+import 'package:biblioteca/data/models/emprestimos_model.dart';
 import 'package:flutter/material.dart';
 import 'package:biblioteca/data/models/exemplar_model.dart';
 
@@ -9,8 +10,15 @@ class ExemplarProvider with ChangeNotifier {
   List<Exemplar> exemplares = [];
   final num idDaSessao;
   final String usuarioLogado;
-
+  List<EmprestimosModel> listaEmprestados = [];  //alterei so isso aqui
   ExemplarProvider(this.idDaSessao, this.usuarioLogado);
+
+  void addExemplarEmprestado (List<EmprestimosModel> exemplares){
+    listaEmprestados.addAll(exemplares);
+    print(listaEmprestados);
+    notifyListeners();
+  }
+
 
   // Carrega a lista de exemplares
   Future<void> loadExemplares() async {

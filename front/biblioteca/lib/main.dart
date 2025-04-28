@@ -1,5 +1,6 @@
 import 'package:biblioteca/data/providers/auth_provider.dart';
 import 'package:biblioteca/data/providers/autor_provider.dart';
+import 'package:biblioteca/data/providers/categoria_provider.dart';
 import 'package:biblioteca/data/providers/exemplares_provider.dart';
 import 'package:biblioteca/data/providers/login_provider.dart';
 import 'package:biblioteca/data/providers/menu_provider.dart';
@@ -9,6 +10,7 @@ import 'package:biblioteca/data/providers/paises_provider.dart';
 import 'package:biblioteca/screens/login.dart';
 import 'package:biblioteca/screens/pagina_inicial.dart';
 import 'package:biblioteca/screens/pesquisar_livro.dart';
+import 'package:biblioteca/screens/library_dashboard.dart';
 
 import 'package:biblioteca/screens/tela_emprestimo.dart';
 
@@ -42,9 +44,7 @@ void main() async {
     }
   }
 
-  final caminhoApi = Platform.isWindows
-      ? r'.\api.exe'
-      : './api';
+  final caminhoApi = Platform.isWindows ? r'.\api.exe' : './api';
   if (File(caminhoApi).existsSync()) {
     processoApi = await Process.start(caminhoApi, List.empty());
   }
@@ -83,6 +83,12 @@ class Myapp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => MenuState()),
         ChangeNotifierProvider(create: (context) => AutorProvider()),
+        ProxyProvider<AuthProvider, CategoriaProvider>(
+          create: (_) => CategoriaProvider(0, ''),
+          update: (_, authProvider, usuarioProvider) => CategoriaProvider(
+              authProvider.idDaSessao, authProvider.usuarioLogado),
+          dispose: (_, usuarioProvider) => usuarioProvider.dispose(),
+        ),
         ProxyProvider<AuthProvider, PaisesProvider>(
           create: (_) => PaisesProvider(0, ''),
           update: (_, authProvider, usuarioProvider) => PaisesProvider(
@@ -131,6 +137,7 @@ class Myapp extends StatelessWidget {
           AppRoutes.login: (ctx) => const TelaLogin(),
           AppRoutes.logout: (ctx) => const Myapp(),
           AppRoutes.home: (ctx) => const TelaPaginaIncial(),
+          AppRoutes.dashboard: (ctx) => LibraryDashboard(),
           AppRoutes.usuarios: (ctx) => const UserTablePage(),
           AppRoutes.novoUsuario: (ctx) => const FormUser(),
           AppRoutes.editarUsuario: (ctx) => const FormUser(),

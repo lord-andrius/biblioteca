@@ -1,20 +1,20 @@
-// ignore_for_file: use_build_context_synchronously
-import 'package:biblioteca/data/models/usuario_model.dart';
-import 'package:biblioteca/data/providers/usuario_provider.dart';
-import 'package:biblioteca/utils/routes.dart';
+import 'package:biblioteca/data/models/categorias_model.dart';
+import 'package:biblioteca/data/providers/categoria_provider.dart';
+import 'package:biblioteca/widgets/forms/campo_obrigatorio.dart';
+import 'package:biblioteca/widgets/navegacao/bread_crumb.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:biblioteca/widgets/navegacao/bread_crumb.dart';
 
-class UserTablePage extends StatefulWidget {
-  const UserTablePage({super.key});
+class CategoriesTablePage extends StatefulWidget {
+  const CategoriesTablePage({super.key});
 
   @override
-  UserTablePageState createState() => UserTablePageState();
+  State<CategoriesTablePage> createState() => _CategoriesTablePageState();
 }
 
-class UserTablePageState extends State<UserTablePage> {
-  //TextEditingController _buscaController = TextEditingController();
+class _CategoriesTablePageState extends State<CategoriesTablePage> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _descriptionController = TextEditingController();
 
   int rowsPerPage = 10; // Quantidade de linhas por página
   final List<int> rowsPerPageOptions = [5, 10, 15, 20];
@@ -23,13 +23,15 @@ class UserTablePageState extends State<UserTablePage> {
   bool _isInit = true;
   bool _isLoading = false;
 
+  late List<Categoria> categorias;
+
   @override
   void didChangeDependencies() {
     if (_isInit) {
       setState(() {
         _isLoading = true;
       });
-      Provider.of<UsuarioProvider>(context).loadUsuarios().then((_) => {
+      Provider.of<CategoriaProvider>(context).loadCategorias().then((_) => {
             setState(() {
               _isLoading = false;
             })
@@ -43,26 +45,31 @@ class UserTablePageState extends State<UserTablePage> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
-        : getPage();
+    CategoriaProvider categoriaProvider =
+        Provider.of<CategoriaProvider>(context);
+    categorias = context.watch<CategoriaProvider>().categorias;
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (categoriaProvider.hasErrors) {
+      return Text(categoriaProvider.error!);
+    } else {
+      return getPage(categoriaProvider, categorias);
+    }
   }
 
-  Material getPage() {
-    UsuarioProvider provider = Provider.of<UsuarioProvider>(context);
-    List<Usuario> users = provider.users;
-    int totalPages = (users.length / rowsPerPage).ceil();
+  Material getPage(CategoriaProvider provider, List<Categoria> categories) {
+    int totalPages = (categories.length / rowsPerPage).ceil();
 
     // Calcula o índice inicial e final dos usuários exibidos
     int startIndex = (currentPage - 1) * rowsPerPage;
-    int endIndex = (startIndex + rowsPerPage) < users.length
+    int endIndex = (startIndex + rowsPerPage) < categories.length
         ? (startIndex + rowsPerPage)
-        : users.length;
+        : categories.length;
 
     // Seleciona os usuários que serão exibidos na página atual
-    List<Usuario> paginatedUsers = users.sublist(startIndex, endIndex);
+    List<Categoria> paginatedCategorias =
+        categories.sublist(startIndex, endIndex);
 
     // Lógica para definir os botões de página (máximo 10 botões)
     int startPage = currentPage - 4 < 1 ? 1 : currentPage - 4;
@@ -76,7 +83,7 @@ class UserTablePageState extends State<UserTablePage> {
         children: [
           // Barra de navegação
           const BreadCrumb(
-              breadcrumb: ["Início", "Usuários"],
+              breadcrumb: ["Início", "Categorias"],
               icon: Icons.co_present_rounded),
 
           // Corpo da página
@@ -91,10 +98,15 @@ class UserTablePageState extends State<UserTablePage> {
                   children: [
                     ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.novoUsuario);
+                        //Nova categoria
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return categoriaDialog(context, provider, null);
+                            });
                       },
                       label: const Text(
-                        'Novo Usuário',
+                        'Nova categoria',
                         style: TextStyle(
                             fontSize: 16.0, fontWeight: FontWeight.bold),
                       ),
@@ -155,53 +167,36 @@ class UserTablePageState extends State<UserTablePage> {
                   children: [
                     // Cabeçalho da tabela
                     const TableRow(
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 44, 62, 80)
-                      ),
+                      decoration:
+                          BoxDecoration(color: Color.fromARGB(255, 44, 62, 80)),
                       children: [
                         Padding(
                             padding: EdgeInsets.all(8.0),
-                            child: Text('Nome',
+                            child: Text('Categoria',
                                 textAlign: TextAlign.left,
-                                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15))),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Turma',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Turno',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Login',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('Tipo de Usuario',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
-                        ),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                    fontSize: 15))),
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text('Opções',
                               textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 15)),
                         ),
                       ],
                     ),
 
                     // Linhas da tabela
-                    for (int x = 0; x <paginatedUsers.length; x++)
+                    for (int x = 0; x < paginatedCategorias.length; x++)
                       TableRow(
                         decoration: BoxDecoration(
-                          color: x % 2 == 0?const Color.fromRGBO(233, 235, 238, 75): const Color.fromRGBO(255, 255, 255, 1),
+                          color: x % 2 == 0
+                              ? const Color.fromRGBO(233, 235, 238, 75)
+                              : const Color.fromRGBO(255, 255, 255, 1),
                         ),
                         children: [
                           Align(
@@ -209,54 +204,13 @@ class UserTablePageState extends State<UserTablePage> {
                                 .centerLeft, // Alinha o texto à esquerda
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(paginatedUsers[x].nome,
-                                  textAlign:
-                                      TextAlign.left,
-                                  style:  const TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5),    
-                                  ), // Alinhamento horizontal
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(paginatedUsers[x].getTurma,
-                                  textAlign: TextAlign.left,
-                                style:  const TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(paginatedUsers[x].getTurno,
-                                  textAlign: TextAlign.left,
-                                  style:  const TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5),
-                                  
-                                  ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Text(paginatedUsers[x].login, 
-                                    textAlign: TextAlign.left,
-                                    style:  const TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5)
-
-                                  ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(paginatedUsers[x].getTipoDeUsuario,
-                                  textAlign: TextAlign.left,
-                                  style:  const TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5)
-                                  ),
+                              child: Text(
+                                paginatedCategorias[x].descricao,
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 14.5),
+                              ), // Alinhamento horizontal
                             ),
                           ),
                           Align(
@@ -265,38 +219,18 @@ class UserTablePageState extends State<UserTablePage> {
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 children: [
-                                  ElevatedButton(
-                                    onPressed: () {},
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 128, 128, 128),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 5),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                    ),
-                                    child: const Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(Icons.library_books_rounded,
-                                            color: Colors.white),
-                                        SizedBox(width: 4),
-                                        Text('Histórico',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            )),
-                                      ],
-                                    ),
-                                  ),
                                   const SizedBox(width: 3),
                                   ElevatedButton(
                                     onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, AppRoutes.editarUsuario,
-                                          arguments: paginatedUsers[x]);
+                                      //Botão editar
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return categoriaDialog(
+                                                context,
+                                                provider,
+                                                paginatedCategorias[x]);
+                                          });
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:
@@ -328,10 +262,10 @@ class UserTablePageState extends State<UserTablePage> {
                                           context: context,
                                           builder: (context) {
                                             return AlertDialog(
-                                              title:
-                                                  const Text('Excluir Usuário'),
+                                              title: const Text(
+                                                  'Excluir Categoria'),
                                               content: const Text(
-                                                  'Tem certeza que deseja excluir este usuário?'),
+                                                  'Tem certeza que deseja excluir esta categoria?'),
                                               actions: [
                                                 ElevatedButton(
                                                     onPressed: () {
@@ -363,12 +297,17 @@ class UserTablePageState extends State<UserTablePage> {
                                                         const Text('Cancelar')),
                                                 ElevatedButton(
                                                     onPressed: () {
-                                                      provider.deleteUsuario(
-                                                          paginatedUsers[x].idDoUsuario);
+                                                      //Colocar aqui o deletar
+                                                      provider.deleteCatgoria(
+                                                          paginatedCategorias[
+                                                              x]);
                                                       setState(() {
-                                                        users.remove(paginatedUsers[x]);
+                                                        categories.remove(
+                                                            paginatedCategorias[
+                                                                x]);
                                                       });
-                                                      Navigator.pop(context);
+                                                      Navigator.of(context)
+                                                          .pop();
                                                     },
                                                     style: ElevatedButton
                                                         .styleFrom(
@@ -485,6 +424,88 @@ class UserTablePageState extends State<UserTablePage> {
           ),
         ],
       ),
+    );
+  }
+
+  AlertDialog categoriaDialog(BuildContext context,
+      CategoriaProvider categoriaProvider, Categoria? categoria) {
+    bool isEdit = false;
+
+    if (categoria != null) {
+      isEdit = true;
+      _descriptionController.text = categoria.descricao;
+    }
+
+    return AlertDialog(
+      title: isEdit
+          ? const Text('Editar Categoria')
+          : const Text('Nova Categoria'),
+      content: SizedBox(
+        width: 500,
+        height: 100,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+              key: _formKey,
+              child: TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  label: CampoObrigatorio(label: "Descrição"),
+                  border: OutlineInputBorder(),
+                ),
+              )),
+        ),
+      ),
+      actions: [
+        ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 128, 128, 128),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            child: const Text('Cancelar')),
+
+        //Botão Salvar
+        ElevatedButton(
+          onPressed: () {
+            if (isEdit) {
+              categoria!.descricao = _descriptionController.text;
+              categoriaProvider.editCatgoria(categoria);
+              setState(() {
+                categorias.firstWhere((c)=>c.idDaCategoria == categoria!.idDaCategoria).descricao = _descriptionController.text;
+              });
+              Navigator.of(context).pop();
+            } else {
+              categoriaProvider.addCategoria(_descriptionController.text);
+              setState(() {
+                categorias.add(Categoria(
+                    idDaCategoria: 1, descricao: _descriptionController.text));
+              });
+              Navigator.of(context).pop();
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 38, 42, 79),
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Salvar', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

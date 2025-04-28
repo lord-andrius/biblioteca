@@ -1,6 +1,5 @@
 import 'package:biblioteca/data/models/livro_model.dart';
 import 'package:biblioteca/data/services/livro_service.dart';
-import 'package:biblioteca/data/models/autor_model.dart';
 import 'package:flutter/foundation.dart';
 
 class LivroProvider extends ChangeNotifier {
@@ -32,22 +31,19 @@ class LivroProvider extends ChangeNotifier {
     _isLoading = true;
     _error = null;
     notifyListeners();
-    print("Loading livros...");
+    
 
     try {
       final livrosAtingidos =
           await _livroService.fetchLivros(idDaSessao, usuarioLogado);
-      print("Livros fetched: ${livrosAtingidos.livrosAtingidos.length}");
       if (!listEquals(_livros, livrosAtingidos.livrosAtingidos)) {
         _livros = livrosAtingidos.livrosAtingidos;
       }
     } catch (e) {
       _error = "Provider: Erro ao carregar os Livros:\n$e";
-      print("Error loading livros: $e");
     } finally {
       _isLoading = false;
       notifyListeners();
-      print("Loading complete.");
     }
   }
 

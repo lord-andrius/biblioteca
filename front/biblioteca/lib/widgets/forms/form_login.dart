@@ -72,7 +72,7 @@ class _FormLoginState extends State<FormLogin> {
         if (_login!.aceito) {
           _authProvider.login(_login!.idSessao, login);
           Future.delayed(
-            Duration(milliseconds: 200),
+            const Duration(milliseconds: 200),
             () => Navigator.pushReplacementNamed(context, AppRoutes.home),
           );
         } else {

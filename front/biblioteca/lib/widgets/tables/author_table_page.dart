@@ -1,5 +1,6 @@
 import 'package:biblioteca/data/models/autor_model.dart';
 import 'package:biblioteca/data/providers/autor_provider.dart';
+import 'package:biblioteca/widgets/tables/autores_obras_table_page.dart';
 import 'package:biblioteca/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:biblioteca/widgets/navegacao/bread_crumb.dart';
@@ -39,7 +40,7 @@ class AuthorTablePageState extends State<AuthorTablePage> {
     if (autorProvider.isloading) {
       return const Center(child: CircularProgressIndicator());
     } else if (autorProvider.hasErrors) {
-      return Text(autorProvider.error!);
+      return Text(autorProvider.error ?? 'Erro desconhecido');
     } else {
       return tableAutor(context, autores);
     }
@@ -148,47 +149,64 @@ class AuthorTablePageState extends State<AuthorTablePage> {
                   children: [
                     // Cabeçalho da tabela
                     const TableRow(
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 44, 62, 80),
-                        ),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 44, 62, 80),
+                      ),
                       children: [
                         Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Text('Nome',
                                 textAlign: TextAlign.left,
-                                style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15))),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                    fontSize: 15))),
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text('Ano de Nascimento',
                               textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 15)),
                         ),
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text('Nacionalidade',
                               textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 15)),
                         ),
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text('Sexo',
                               textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 15)),
                         ),
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text('Opções',
                               textAlign: TextAlign.left,
-                              style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontSize: 15)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                  fontSize: 15)),
                         ),
                       ],
                     ),
 
                     // Linhas da tabela
-                    for (int x =0; x<paginatedAuthors.length;x++)
+                    for (int x = 0; x < paginatedAuthors.length; x++)
                       TableRow(
                         decoration: BoxDecoration(
-                          color: x % 2 == 0?Color.fromRGBO(233, 235, 238, 75): Color.fromRGBO(255, 255, 255, 1),
+                          color: x % 2 == 0
+                              ? const Color.fromRGBO(233, 235, 238, 75)
+                              : const Color.fromRGBO(255, 255, 255, 1),
                         ),
                         children: [
                           Align(
@@ -197,10 +215,11 @@ class AuthorTablePageState extends State<AuthorTablePage> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(paginatedAuthors[x].nome,
-                                  textAlign:TextAlign.left,
-                                  style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5)
-                                      
-                                  ), // Alinhamento horizontal
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize:
+                                          14.5)), // Alinhamento horizontal
                             ),
                           ),
                           Align(
@@ -210,10 +229,13 @@ class AuthorTablePageState extends State<AuthorTablePage> {
                               child: Text(
                                   paginatedAuthors[x].anoNascimento == null
                                       ? ''
-                                      : paginatedAuthors[x].anoNascimento.toString(),
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5)
-                                  ),
+                                      : paginatedAuthors[x]
+                                          .anoNascimento
+                                          .toString(),
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 14.5)),
                             ),
                           ),
                           Align(
@@ -221,20 +243,21 @@ class AuthorTablePageState extends State<AuthorTablePage> {
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(paginatedAuthors[x].nacionalidade,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5)
-                                  ),
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 14.5)),
                             ),
                           ),
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:
-                                  Text(paginatedAuthors[x].sexo, 
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(fontWeight: FontWeight.w300, fontSize: 14.5)
-                                  ),
+                              child: Text(paginatedAuthors[x].sexo,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 14.5)),
                             ),
                           ),
                           Align(
@@ -285,8 +308,10 @@ class AuthorTablePageState extends State<AuthorTablePage> {
                                                 //Aqui é o botão excluir inferno
                                                 ElevatedButton(
                                                     onPressed: () {
-                                                      _delete(paginatedAuthors[x]);
-                                                      Navigator.pop(dialogContext);
+                                                      _delete(
+                                                          paginatedAuthors[x]);
+                                                      Navigator.pop(
+                                                          dialogContext);
                                                     },
                                                     style: ElevatedButton
                                                         .styleFrom(
@@ -365,7 +390,13 @@ class AuthorTablePageState extends State<AuthorTablePage> {
                                   ),
                                   const SizedBox(width: 3),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ObrasPage(autor: paginatedAuthors[x])),
+                                      );
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color.fromARGB(
                                           255, 128, 128, 128),

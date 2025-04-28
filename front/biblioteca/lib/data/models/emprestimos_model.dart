@@ -3,6 +3,7 @@ class EmprestimosModel {
   String nome;
   String dataEmprestimo;
   String dataDevolucao;
-
-  EmprestimosModel(this.codigo, this.nome, this.dataEmprestimo, this.dataDevolucao);
+  bool selecionadoRenov = false;
+  EmprestimosModel(
+      this.codigo, this.nome, this.dataEmprestimo, this.dataDevolucao);
 }

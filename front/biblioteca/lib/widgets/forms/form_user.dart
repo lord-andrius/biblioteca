@@ -99,6 +99,7 @@ class _FormUserState extends State<FormUser> {
           turma: int.tryParse(_turmaController.text) ?? 0,
           permissao:
               _userTypeController.text == TipoDeUsuario.bibliotecario ? AppConfig.maxPermissoes : 0,
+              
         );
         await provider.addUsuario(novoUsuario);
       }

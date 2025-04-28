@@ -326,8 +326,8 @@ INSERT INTO turma (id_turma, descricao, serie, turno) VALUES
 
 -- Tabela usuario
 INSERT INTO usuario (login, cpf, nome, email, telefone, data_nascimento, senha, permissoes) VALUES
-('admin','21747274046', 'Admin User', 'admin@biblioteca.com', '11123456789', '1990-01-01', 'ea4a6e5c2c9f8239b566c1dc4ef972514f159ebd61d046168688a2c8531a4bf3',  2047), -- senhaAdmin
-	('biblio','76784092066', 'Bibliotecario', 'bibliotecario@biblioteca.com', '11123456789', '1980-05-15', '76cc71b64516994b050bdb5a79c50865654e551ae126492ee20d08047e841a86',  2047), --senhaBiblio
+('admin','21747274046', 'Admin User', 'admin@biblioteca.com', '11123456789', '1990-01-01', 'ea4a6e5c2c9f8239b566c1dc4ef972514f159ebd61d046168688a2c8531a4bf3',  16383), -- senhaAdmin
+	('biblio','76784092066', 'Bibliotecario', 'bibliotecario@biblioteca.com', '11123456789', '1980-05-15', '76cc71b64516994b050bdb5a79c50865654e551ae126492ee20d08047e841a86',  16383), --senhaBiblio
 ('joao','26843511040', 'João Silva', 'joao.silva@usuario.com', '11987654321', '1995-08-10', 'bffeba2cd38fb42e180da0254a7893f6db46e3cb2a93ff5e9b5494ce789e1006',  1); --senhaJoao
 
 update usuario set turma = 1 where login = 'joao';
@@ -336,9 +336,13 @@ update usuario set turma = 1 where login = 'joao';
 INSERT INTO emprestimo (id_emprestimo, exemplar_livro, usuario, data_emprestimo, data_prevista_devolucao) VALUES
 (1, 1, 3, '2024-01-01', '2024-01-15'),
 (2, 2, 3, '2024-01-02', '2024-01-16');
+select setval((select pg_get_serial_sequence('emprestimo', 'id_emprestimo')), (select max(id_emprestimo) from emprestimo) + 1);
+
 
 
 -- Tabela detalhe_emprestimo
 INSERT INTO detalhe_emprestimo (id_detalhe_emprestimo, usuario, emprestimo, acao, detalhe, observacao) VALUES
 (1, 3, 1, 1, 'Empréstimo realizado', 'eu odeio javascript'),
 (2, 3, 2, 2, 'Renovação solicitada', 'c > c++');
+select setval((select pg_get_serial_sequence('detalhe_emprestimo', 'id_detalhe_emprestimo')), (select max(id_detalhe_emprestimo) from detalhe_emprestimo) + 1);
+

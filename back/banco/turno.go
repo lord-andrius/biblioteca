@@ -26,3 +26,19 @@ func PegarTodosOsTurnos() []modelos.Turno {
 	}
 	return turnosEncontrados
 }
+
+/*
+func PegarTurnoPorId(idTurno int) (modelos.Turno, bool) {
+	conexao := PegarConexao()
+	textoQuery := "select id_turno, descricao from turno t where id_turno = $1"
+	var turno modelos.Turno
+	erro := conexao.QueryRow(context.Background(), textoQuery, idTurno).Scan(
+		&Turno.
+	)
+	if erro != nil {
+		return modelos.Turno{}, false
+	}
+	var turno modelos.Turno
+}
+*/
+

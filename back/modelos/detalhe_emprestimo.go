@@ -20,6 +20,7 @@ func TextoAcaoDetalhe(acaoDetalhe int) string {
 
 
 type DetalheEmprestimo struct {
+	IdDetalheEmprestimo int
 	Emprestimo Emprestimo
 	Usuario Usuario // Esse usuário é quem faz o empréstimo
 	DataHora string
