@@ -2,7 +2,7 @@ package rotas
 
 import (
 	"biblioteca/modelos"
-	servicoCategoria "biblioteca/servicos/categoria"
+	"biblioteca/servicos"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -21,38 +21,38 @@ type respostaCategoria struct {
 	CategoriasAtingidas []modelos.Categoria
 }
 
-func erroServicoCategoriaParaErrHttp(erro servicoCategoria.ErroDeServicoDaCategoria, resposta http.ResponseWriter) {
+func erroServicoCategoriaParaErrHttp(erro servicos.ErroDeServicoDaCategoria, resposta http.ResponseWriter) {
 	switch erro {
 
-	case servicoCategoria.ErroDeServicoDaCategoriaDescricaoDuplicada:
+	case servicos.ErroDeServicoDaCategoriaDescricaoDuplicada:
 		resposta.WriteHeader(http.StatusConflict)
 		fmt.Fprintf(resposta, "A descrição informada já existe na base de dados")
 		return
-	case servicoCategoria.ErroDeServicoDaCategoriaInexistente:
+	case servicos.ErroDeServicoDaCategoriaInexistente:
 		resposta.WriteHeader(http.StatusNotFound)
 		fmt.Fprintf(resposta, "A categória requisitada não existe")
 		return
-	case servicoCategoria.ErroDeServicoDaCategoriaExcutarCriacao:
+	case servicos.ErroDeServicoDaCategoriaExcutarCriacao:
 		resposta.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(resposta, "Aconteceu algum erro na ação de criação na base de dados")
 		return
-	case servicoCategoria.ErroDeServicoDaCategoriaExcutarAtualizacao:
+	case servicos.ErroDeServicoDaCategoriaExcutarAtualizacao:
 		resposta.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(resposta, "Aconteceu algum erro na ação de atualização na base de dados")
 		return
-	case servicoCategoria.ErroDeServicoDaCategoriaExcutarExclusao:
+	case servicos.ErroDeServicoDaCategoriaExcutarExclusao:
 		resposta.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(resposta, "Aconteceu algum erro na ação de exclusão na base de dados")
 		return
-	case servicoCategoria.ErroDeServicoDaCategoriaSessaoInvalida:
+	case servicos.ErroDeServicoDaCategoriaSessaoInvalida:
 		resposta.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintf(resposta, "Sessão inválida")
 		return
-	case servicoCategoria.ErroDeServicoDaCategoriaSemPermisao:
+	case servicos.ErroDeServicoDaCategoriaSemPermisao:
 		resposta.WriteHeader(http.StatusUnauthorized)
 		fmt.Fprintf(resposta, "Usuário não possui permissão para executar essa ação")
 		return
-	case servicoCategoria.ErroDeServicoDaCategoriaFalhaNaBusca:
+	case servicos.ErroDeServicoDaCategoriaFalhaNaBusca:
 		resposta.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprintf(resposta, "Aconteceu algum erro na ação de buscar os dados de categoria na base de dados")
 		return
@@ -97,14 +97,14 @@ func Categoria(resposta http.ResponseWriter, requisicao *http.Request) {
 		var novaCategoria modelos.Categoria
 		novaCategoria.Descricao = requisicaoCategoria.Descricao
 
-		erro := servicoCategoria.CriarCategoria(requisicaoCategoria.IdDaSessao, requisicaoCategoria.LoginDoUsuarioRequerente, novaCategoria)
+		erro := servicos.CriarCategoria(requisicaoCategoria.IdDaSessao, requisicaoCategoria.LoginDoUsuarioRequerente, novaCategoria)
 
-		if erro != servicoCategoria.ErroDeServicoDaCategoriaNenhum {
+		if erro != servicos.ErroDeServicoDaCategoriaNenhum {
 			erroServicoCategoriaParaErrHttp(erro, resposta)
 			return
 		}
 
-		novaCategoria.IdDaCategoria = servicoCategoria.PegarIdCategoria(novaCategoria.Descricao)
+		novaCategoria.IdDaCategoria = servicos.PegarIdCategoria(novaCategoria.Descricao)
 
 		respostaCategoria := respostaCategoria{
 			[]modelos.Categoria{
@@ -118,12 +118,12 @@ func Categoria(resposta http.ResponseWriter, requisicao *http.Request) {
 
 		return
 	case "GET":
-		categoriasEncontradas, erro := servicoCategoria.BuscarCategoria(requisicaoCategoria.IdDaSessao, requisicaoCategoria.LoginDoUsuarioRequerente, requisicaoCategoria.TextoDeBusca)
-		if erro == servicoCategoria.ErroDeServicoDaCategoriaSemPermisao {
+		categoriasEncontradas, erro := servicos.BuscarCategoria(requisicaoCategoria.IdDaSessao, requisicaoCategoria.LoginDoUsuarioRequerente, requisicaoCategoria.TextoDeBusca)
+		if erro == servicos.ErroDeServicoDaCategoriaSemPermisao {
 			resposta.WriteHeader(http.StatusForbidden)
 			fmt.Fprintf(resposta, "Este usuário não tem permissão para essa operação")
 			return
-		} else if erro == servicoCategoria.ErroDeServicoDaCategoriaFalhaNaBusca {
+		} else if erro == servicos.ErroDeServicoDaCategoriaFalhaNaBusca {
 			resposta.WriteHeader(http.StatusInternalServerError)
 			fmt.Fprint(resposta, "Houve um erro interno enquanto se fazia a busca! Provavelmente é um bug na api!")
 			return
@@ -146,9 +146,9 @@ func Categoria(resposta http.ResponseWriter, requisicao *http.Request) {
 		categoriaComDadosAtualizados.IdDaCategoria = requisicaoCategoria.Id
 		categoriaComDadosAtualizados.Descricao = requisicaoCategoria.Descricao
 
-		categoriaAtualizado, erro := servicoCategoria.AtualizarCategoria(requisicaoCategoria.IdDaSessao, requisicaoCategoria.LoginDoUsuarioRequerente, categoriaComDadosAtualizados)
+		categoriaAtualizado, erro := servicos.AtualizarCategoria(requisicaoCategoria.IdDaSessao, requisicaoCategoria.LoginDoUsuarioRequerente, categoriaComDadosAtualizados)
 
-		if erro != servicoCategoria.ErroDeServicoDaCategoriaNenhum {
+		if erro != servicos.ErroDeServicoDaCategoriaNenhum {
 			erroServicoCategoriaParaErrHttp(erro, resposta)
 			return
 		}
@@ -169,7 +169,7 @@ func Categoria(resposta http.ResponseWriter, requisicao *http.Request) {
 			return
 		}
 
-		if erro := servicoCategoria.DeletarCategoria(requisicaoCategoria.IdDaSessao, requisicaoCategoria.LoginDoUsuarioRequerente, requisicaoCategoria.Id); erro != servicoCategoria.ErroDeServicoDaCategoriaNenhum {
+		if erro := servicos.DeletarCategoria(requisicaoCategoria.IdDaSessao, requisicaoCategoria.LoginDoUsuarioRequerente, requisicaoCategoria.Id); erro != servicos.ErroDeServicoDaCategoriaNenhum {
 			erroServicoCategoriaParaErrHttp(erro, resposta)
 			return
 		}

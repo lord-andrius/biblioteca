@@ -4,7 +4,6 @@ package modelos
 type Autor struct {
 	ID              int    `json:"id"`
 	Nome            string `json:"nome"`
-	AnoNascimento   uint16 `json:"ano_nascimento"`
 	Nacionalidade   uint8  `json:"nacionalidade"`
 	Sexo            string `json:"sexo"`
 	DataCriacao     string `json:"data_criacao"`
@@ -15,7 +14,6 @@ type Autor struct {
 type AutorResposta struct {
 	ID                  int     `json:"id"`
 	Nome                string  `json:"nome"`
-	AnoNascimento       *uint16 `json:"ano_nascimento,omitempty"`
 	Nacionalidade       *string `json:"Nacionalidade,omitempty"`
 	NacionalidadeCodigo *uint8  `json:"nacionalidade_codigo,omitempty"`
 	Sexo                *string `json:"sexo,omitempty"`

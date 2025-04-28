@@ -1,11 +1,10 @@
 package modelos
 
 const (
-	StatusEmprestimoEmAndamento = 1
-  StatusEmprestimoEntregueComAtraso = 2
-  StatusEmprestimoConcluido = 3
+	StatusEmprestimoEmAndamento       = 1
+	StatusEmprestimoEntregueComAtraso = 2
+	StatusEmprestimoConcluido         = 3
 )
-
 
 type Emprestimo struct {
 	IdDoEmprestimo        int

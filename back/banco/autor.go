@@ -16,7 +16,6 @@ func VisualizarAutores() ([]modelos.AutorResposta, error) {
 		`SELECT 
 			a.id_autor AS id,
 			a.nome AS nome,
-			a.ano_nascimento AS ano_nascimento,
 			p.nome AS nacionalidade,
 			a.nacionalidade AS nacionalidade_codigo,
 			CASE	 
@@ -34,7 +33,7 @@ func VisualizarAutores() ([]modelos.AutorResposta, error) {
 
 	for linhas.Next() {
 		var autor modelos.AutorResposta
-		if err := linhas.Scan(&autor.ID, &autor.Nome, &autor.AnoNascimento, &autor.Nacionalidade, &autor.NacionalidadeCodigo, &autor.Sexo, &autor.SexoCodigo); err != nil && !strings.Contains(err.Error(), "cannot scan NULL") {
+		if err := linhas.Scan(&autor.ID, &autor.Nome, &autor.Nacionalidade, &autor.NacionalidadeCodigo, &autor.Sexo, &autor.SexoCodigo); err != nil && !strings.Contains(err.Error(), "cannot scan NULL") {
 			return autores, err
 		}
 		autores = append(autores, autor)
@@ -46,13 +45,6 @@ func VisualizarAutores() ([]modelos.AutorResposta, error) {
 // InserirAutor realizar o INSERT no banco de dados, pegando como base os parametros da Struct Autor
 func InserirAutor(a modelos.Autor) error {
 	conexao := PegarConexao()
-
-	var parametroAnoNascimento interface{}
-	if a.AnoNascimento == 0 {
-		parametroAnoNascimento = nil
-	} else {
-		parametroAnoNascimento = a.AnoNascimento
-	}
 
 	var parametroNacionalidade interface{}
 	if a.Nacionalidade == 0 {
@@ -69,9 +61,8 @@ func InserirAutor(a modelos.Autor) error {
 	}
 
 	if _, err := conexao.Exec(context.Background(),
-		"INSERT INTO autor (nome, ano_nascimento, nacionalidade, sexo) VALUES ($1, $2, $3, $4)",
+		"INSERT INTO autor (nome, nacionalidade, sexo) VALUES ($1, $2, $3)",
 		a.Nome,
-		parametroAnoNascimento,
 		parametroNacionalidade,
 		parametroSexo,
 	); err != nil {
@@ -84,13 +75,6 @@ func InserirAutor(a modelos.Autor) error {
 // AtualizarAutor realizar o UPDATE no banco de dados, pegando como base os parametros da Struct Autor
 func AtualizarAutor(a modelos.Autor) error {
 	conexao := PegarConexao()
-
-	var parametroAnoNascimento interface{}
-	if a.AnoNascimento == 0 {
-		parametroAnoNascimento = nil
-	} else {
-		parametroAnoNascimento = a.AnoNascimento
-	}
 
 	var parametroNacionalidade interface{}
 	if a.Nacionalidade == 0 {
@@ -109,13 +93,11 @@ func AtualizarAutor(a modelos.Autor) error {
 	if _, err := conexao.Exec(context.Background(), `
 		UPDATE autor
 		SET nome = $1,
-			ano_nascimento = $2,
-			nacionalidade = $3,
-			sexo = $4,
+			nacionalidade = $2,
+			sexo = $3,
 			data_atualizacao = CURRENT_TIMESTAMP
-		WHERE id_autor = $5`,
+		WHERE id_autor = $4`,
 		a.Nome,
-		parametroAnoNascimento,
 		parametroNacionalidade,
 		parametroSexo,
 		a.ID,
