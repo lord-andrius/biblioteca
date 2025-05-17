@@ -193,6 +193,14 @@ class _TelaDevolucaoState extends State<TelaDevolucao> {
               ],
             ));
   }
+  Future<void> DevolverExemplares(List<EmprestimosModel> emprestimosRenov) async{
+    final copia = List.from(emprestimosRenov);
+    for(EmprestimosModel item in copia){
+      print('Item: ${item.IdDoEmprestimo}');
+      await Provider.of<EmprestimoProvider>(context, listen: false).Devolver(item.IdDoEmprestimo);
+    }
+    
+  }
   @override
   Widget build(BuildContext context) {
     exemplares = Provider.of<ExemplarProvider>(context, listen: true).listaEmprestados;
@@ -293,6 +301,7 @@ class _TelaDevolucaoState extends State<TelaDevolucao> {
                                     if(listaParaDevolucao.isEmpty){
                                       msgSnackBar('Nenhum exemplar selecionado', 1);
                                     }else{
+                                      DevolverExemplares(listaParaDevolucao);
                                       msgConfirmEmprestimo(listaParaDevolucao).then((_){
                                      for (EmprestimosModel exemplar
                                         in List.from(selectedBoxExemplar)) {

@@ -54,10 +54,15 @@ class EmprestimoService {
     if (response.statusCode != 200) {
       throw Exception(response.data);
     }
+    List<EmprestimosModel> emprestimos = [];
     final respostaFinal = jsonDecode(response.data);
-    final emprestimo = EmprestimosModel.fromMap(respostaFinal[0]); 
-
-    return [emprestimo];
+    respostaFinal.map((item){
+      if(item['Status'] == 1){
+        final emprestimo = EmprestimosModel.fromMap(item); 
+        emprestimos.add(emprestimo);
+      }
+    }).toList();
+    return emprestimos;
   }
 
   // Cria um novo emprestimo
@@ -119,6 +124,23 @@ class EmprestimoService {
     final response = await _api.requisicao(
       apiRoute,
       'PUT',
+      body,
+    );
+    if (response.statusCode != 200) {
+      throw Exception(response.data);
+    }
+    return response.statusCode;
+  }
+  Future<int?> DevolverEmprestimo(
+      num idDaSessao, String loginDoUsuarioRequerente, int idEmprestimo) async {
+    final Map<String, dynamic> body = {
+      "idDaSessao": idDaSessao, 
+      "loginDoUsuario" :loginDoUsuarioRequerente,
+      "idDoEmprestimo": idEmprestimo,
+    };
+    final response = await _api.requisicao(
+      apiRoute,
+      'DELETE',
       body,
     );
     if (response.statusCode != 200) {
