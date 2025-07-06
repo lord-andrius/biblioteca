@@ -317,14 +317,15 @@ class HistoryTablePageState extends State<HistoryTablePage> {
                           color: Colors.white,
                           fontSize: 15),
                     ),
-                    if (_sortColumn == 'tombamento')
-                      Icon(
-                        _isAscending
-                            ? Icons.arrow_upward
-                            : Icons.arrow_downward,
-                        color: Colors.white,
-                        size: 18,
-                      ),
+                    Icon(
+                      _sortColumn == 'tombamento'
+                          ? (_isAscending
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward)
+                          : Icons.unfold_more,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                   ],
                 ),
               ),
@@ -352,14 +353,15 @@ class HistoryTablePageState extends State<HistoryTablePage> {
                           color: Colors.white,
                           fontSize: 15),
                     ),
-                    if (_sortColumn == 'livro')
-                      Icon(
-                        _isAscending
-                            ? Icons.arrow_upward
-                            : Icons.arrow_downward,
-                        color: Colors.white,
-                        size: 18,
-                      ),
+                    Icon(
+                      _sortColumn == 'livro'
+                          ? (_isAscending
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward)
+                          : Icons.unfold_more,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                   ],
                 ),
               ),
@@ -387,14 +389,15 @@ class HistoryTablePageState extends State<HistoryTablePage> {
                           color: Colors.white,
                           fontSize: 15),
                     ),
-                    if (_sortColumn == 'dataEmprestimo')
-                      Icon(
-                        _isAscending
-                            ? Icons.arrow_upward
-                            : Icons.arrow_downward,
-                        color: Colors.white,
-                        size: 18,
-                      ),
+                    Icon(
+                      _sortColumn == 'dataEmprestimo'
+                          ? (_isAscending
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward)
+                          : Icons.unfold_more,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                   ],
                 ),
               ),
@@ -422,14 +425,15 @@ class HistoryTablePageState extends State<HistoryTablePage> {
                           color: Colors.white,
                           fontSize: 15),
                     ),
-                    if (_sortColumn == 'dataDevolucao')
-                      Icon(
-                        _isAscending
-                            ? Icons.arrow_upward
-                            : Icons.arrow_downward,
-                        color: Colors.white,
-                        size: 18,
-                      ),
+                    Icon(
+                      _sortColumn == 'dataDevolucao'
+                          ? (_isAscending
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward)
+                          : Icons.unfold_more,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                   ],
                 ),
               ),
@@ -457,14 +461,15 @@ class HistoryTablePageState extends State<HistoryTablePage> {
                           color: Colors.white,
                           fontSize: 15),
                     ),
-                    if (_sortColumn == 'status')
-                      Icon(
-                        _isAscending
-                            ? Icons.arrow_upward
-                            : Icons.arrow_downward,
-                        color: Colors.white,
-                        size: 18,
-                      ),
+                    Icon(
+                      _sortColumn == 'status'
+                          ? (_isAscending
+                              ? Icons.arrow_upward
+                              : Icons.arrow_downward)
+                          : Icons.unfold_more,
+                      color: Colors.white,
+                      size: 16,
+                    ),
                   ],
                 ),
               ),
