@@ -40,6 +40,7 @@ func main() {
 	http.HandleFunc("/pais", rotas.Pais)
 	http.HandleFunc("/emprestimo", rotas.Emprestimo)
 	http.HandleFunc("/dashboard", rotas.Dashboard)
+	http.HandleFunc("/relatorio", rotas.Relatorio)
 	fmt.Printf("Api está rodando em http://%s:%s\n", ip, porta)
 	if erro := http.ListenAndServe(fmt.Sprintf(":%s", porta), nil); erro != nil {
 		fmt.Println(erro)
