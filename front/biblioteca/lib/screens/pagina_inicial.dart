@@ -6,6 +6,7 @@ import 'package:biblioteca/data/providers/auth_provider.dart';
 import 'package:biblioteca/screens/pesquisar_livro.dart';
 import 'package:biblioteca/screens/tela_devolucao.dart';
 import 'package:biblioteca/screens/tela_emprestimo.dart';
+import 'package:biblioteca/screens/tela_relatorios.dart';
 import 'package:biblioteca/screens/telas_testes.dart';
 import 'package:biblioteca/utils/routes.dart';
 import 'package:biblioteca/widgets/forms/form_user.dart';
@@ -229,7 +230,7 @@ void dispose() {
                           page = const BookTablePage();
                           break;
                         case '/relatorios':
-                          page = const Relatorios();
+                          page = const TelaRelatorios();
                           break;
                         case '/nada_consta':
                           page = const NadaConsta();

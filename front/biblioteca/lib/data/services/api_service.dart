@@ -24,13 +24,32 @@ class ApiService {
       String route, String method, Map<String, dynamic> body) async {
     final String baseUrl = _getBaseUrl();
     final String url = "$baseUrl/$route";
-
+    print('Body da requisicao: ${body}');
     return await _dio.request(
       url,
       options: Options(
         validateStatus: (status) => true,
         method: method,
         headers: _headers,
+      ),
+      data: jsonEncode(body),
+    );
+  }
+  Future<Response> requisicaoPdf(
+      String route, String method, Map<String, dynamic> body) async {
+    final String baseUrl = _getBaseUrl();
+    final String url = "$baseUrl/$route";
+    final header ={
+      'Content-Type': 'application/pdf'
+    };
+    print('Body da requisicao: ${body}');
+    return await _dio.request(
+      url,
+      options: Options(
+        validateStatus: (status) => true,
+        method: method,
+        headers: header,
+        responseType: ResponseType.bytes
       ),
       data: jsonEncode(body),
     );

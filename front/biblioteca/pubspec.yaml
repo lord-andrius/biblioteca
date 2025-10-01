@@ -47,8 +47,9 @@ dependencies:
   mockito: ^5.4.5
   mocktail: ^1.0.4
   fl_chart: ^0.70.2
-
-
+  open_file: ^3.3.1
+  path_provider: ^2.1.1
+  file_picker: ^5.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

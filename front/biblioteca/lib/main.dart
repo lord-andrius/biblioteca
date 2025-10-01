@@ -17,6 +17,7 @@ import 'package:biblioteca/screens/pesquisar_livro.dart';
 import 'package:biblioteca/screens/tela_devolucao.dart';
 
 import 'package:biblioteca/screens/tela_emprestimo.dart';
+import 'package:biblioteca/screens/tela_relatorios.dart';
 
 import 'package:biblioteca/screens/telas_testes.dart';
 import 'package:biblioteca/utils/routes.dart';
@@ -164,7 +165,7 @@ class Myapp extends StatelessWidget {
           AppRoutes.historico: (context) => const HistoryTablePage(),
 
           //paginas temporarias para teste
-          AppRoutes.relatorios: (context) => const Relatorios(),
+          AppRoutes.relatorios: (context) => const TelaRelatorios(),
           AppRoutes.nadaConsta: (context) => const NadaConsta(),
           AppRoutes.configuracoes: (context) => const Configuracoes(),
           
